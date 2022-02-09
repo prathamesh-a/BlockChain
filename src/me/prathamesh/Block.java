@@ -17,7 +17,7 @@ public class Block {
     }
 
     public String calculateHash(){
-        return StringUtils.applyHash(previousHash + timeStamp + nonce + data);
+        return StringUtil.applyHash(previousHash + timeStamp + nonce + data);
     }
 
     public void mine(int diff){

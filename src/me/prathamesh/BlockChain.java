@@ -1,11 +1,14 @@
 package me.prathamesh;
 
+import java.security.Security;
 import java.util.ArrayList;
 import com.google.gson.GsonBuilder;
 
 public class BlockChain {
     public static ArrayList<Block> blockchain = new ArrayList<>();
     public static int diff = 5;
+    public static Wallet walletA;
+    public static Wallet walletB;
 
     public static void main(String[] args){
         blockchain.add(new Block("Genesis", "0"));
@@ -25,6 +28,20 @@ public class BlockChain {
         String json = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
         System.out.println("Final Blockchain:");
         System.out.println(json);
+
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
+        walletA = new Wallet();
+        walletB = new Wallet();
+
+        System.out.println("Private and public keys:");
+        System.out.println(StringUtil.getStringFromKey(walletA.privateKey));
+        System.out.println(StringUtil.getStringFromKey(walletA.publicKey));
+
+        Transaction transaction = new Transaction(walletA.publicKey, walletB.publicKey, 5, null);
+        transaction.generateSignature(walletA.privateKey);
+
+        System.out.println("Is signature verified? :" + transaction.verifySignature());
     }
 
     public static boolean isValid(){
